@@ -17,7 +17,10 @@ SPAWNS = [(200, 330), (600, 330), (100, 210), (700, 210), (150, 450), (650, 450)
 
 def bubble_tint(bubble):
     """Return an (r, g, b) colour for a bubble, or None for the default."""
-    pass
+    if not bubble.enemy:
+        return None
+    life_ratio = max(0.0, min(1.0, bubble.life / BUBBLE_LIFE))
+    return (255, int(80 + 110 * life_ratio), int(80 + 150 * life_ratio))
 
 
 def on_fruit_collected(fruit):
@@ -150,7 +153,7 @@ class Game:
         if bubble.enemy or bubble.age >= 1.5:
             return
         for enemy in self.enemies:
-            if bubble.pos.distance_squared_to(enemy.center) < 24 ** 2:
+            if bubble.pos.distance_squared_to(enemy.center) < 24 * 2:
                 self.enemies.remove(enemy)
                 bubble.enemy, bubble.vel.x = enemy, bubble.vel.x * 0.2
                 return
